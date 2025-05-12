@@ -1,10 +1,6 @@
 package org.jetbrains.customers
 
 import io.ktor.server.application.Application
-import io.ktor.server.plugins.di.dependencies
-import io.ktor.server.plugins.di.invoke
-import io.ktor.server.plugins.di.provide
-import io.ktor.server.plugins.di.resolve
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Database
@@ -15,10 +11,13 @@ import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.ktor.plugin.koinModule
 
 fun Application.customerDataModule() {
-    dependencies {
-        provide<CustomerRepository> { CustomerRepositoryImpl(resolve()) }
+    koinModule {
+        singleOf(::CustomerRepositoryImpl) bind CustomerRepository::class
     }
 }
 

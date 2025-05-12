@@ -2,15 +2,14 @@ package org.jetbrains.customers
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.di.dependencies
-import io.ktor.server.plugins.di.provideDelegate
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.routing.delete
+import org.koin.ktor.ext.inject
 
 fun Application.configureCustomerRoutes() {
-    val repository: CustomerRepository by dependencies
+    val repository: CustomerRepository by inject()
 
     routing {
         route("/customers") {

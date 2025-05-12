@@ -14,16 +14,13 @@ import dev.langchain4j.store.embedding.EmbeddingStore
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore
 import io.ktor.server.application.Application
-import io.ktor.server.plugins.di.DependencyProvider
-import io.ktor.server.plugins.di.dependencies
-import io.ktor.server.plugins.di.invoke
-import io.ktor.server.plugins.di.provide
-import io.ktor.server.plugins.di.resolve
 import kotlinx.serialization.Serializable
 import org.jetbrains.ai.ExposedChatMemoryStore
 import org.jetbrains.ai.LangChainFactory
 import org.jetbrains.ai.TravelService
 import org.jetbrains.exposed.sql.Database
+import org.koin.core.module.dsl.singleOf
+import org.koin.ktor.plugin.koinModule
 
 @Serializable
 data class AIConfig(
@@ -35,26 +32,17 @@ data class AIConfig(
 )
 
 fun Application.aiModule(config: AIConfig) {
-    dependencies {
-        provide { model() }
-        provide { embeddingStore() }
-        provide { chat(config) }
-        provide(::retriever)
-        provide { splitter(config) }
-        provide(::memory)
-        provide(::ingestor)
-        provide(::LangChainFactory)
-        provide { resolve<LangChainFactory>().service<TravelService>() }
+    koinModule {
+        single { model() }
+        single { embeddingStore() }
+        single { chat(config) }
+        singleOf(::retriever)
+        single { splitter(config) }
+        singleOf(::memory)
+        singleOf(::ingestor)
+        singleOf(::LangChainFactory)
+        single { get<LangChainFactory>().service<TravelService>() }
     }
-}
-
-// TODO: https://youtrack.jetbrains.com/issue/KTOR-8479/DI-lambda-w-args-overloads
-inline fun <reified A, reified B> DependencyProvider.provide(noinline provide: (A) -> B) {
-    provide { provide(resolve()) }
-}
-
-inline fun <reified A, reified B, reified C, reified D> DependencyProvider.provide(noinline provide: (A, B, C) -> D) {
-    provide { provide(resolve(), resolve(), resolve()) }
 }
 
 // Temp work around https://youtrack.jetbrains.com/issue/KTOR-8477/DI-provide-lambda-type-fails-for-java-function-returns

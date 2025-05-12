@@ -14,12 +14,10 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
-import io.ktor.server.sse.ServerSSESessionWithSerialization
 import io.ktor.server.sse.send
 import io.ktor.server.sse.sse
 import io.ktor.server.websocket.sendSerialized
 import io.ktor.server.websocket.webSocket
-import io.ktor.util.reflect.TypeInfo
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
@@ -35,6 +33,7 @@ import org.jetbrains.ai.TravelService
 import org.jetbrains.app.Message.AnswerEnd
 import org.jetbrains.app.Message.PartialAnswer
 import org.jetbrains.security.UserSession
+import org.koin.ktor.ext.inject
 
 fun Routing.configureChatRoutes() {
     get("/") {
@@ -51,7 +50,7 @@ fun Routing.configureChatRoutes() {
         }
     }
 
-    val travelService: TravelService by application.dependencies
+    val travelService: TravelService by inject()
 
     webSocket("/ws") {
         val session = call.sessions.get<UserSession>()

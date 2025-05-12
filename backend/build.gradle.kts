@@ -21,12 +21,15 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.ktor.client.apache)
     implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.koin.ktor)
+    implementation(libs.koin.slf4j)
     implementation(libs.bundles.exposed)
     implementation(libs.logback.classic)
     implementation(libs.kotlinx.datetime)
     implementation(libs.bundles.flyway)
     implementation(libs.bundles.langchain4j)
     implementation(libs.micrometer.registry.prometheus)
+
 
     testImplementation(libs.bundles.ktor.client)
     testImplementation(libs.bundles.testing)

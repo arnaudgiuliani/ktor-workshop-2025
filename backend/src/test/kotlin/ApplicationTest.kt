@@ -6,9 +6,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.plugins.di.dependencies
-import io.ktor.server.plugins.di.invoke
-import io.ktor.server.plugins.di.provide
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
@@ -20,6 +17,7 @@ import org.jetbrains.customers.CustomerRepository
 import org.jetbrains.customers.CustomerWithBooking
 import org.jetbrains.customers.UpdateCustomer
 import org.junit.AfterClass
+import org.koin.ktor.plugin.koinModule
 import kotlin.test.Test
 
 class ApplicationTest {
@@ -89,10 +87,10 @@ class ApplicationTest {
 
         val app = TestApplication {
             application {
-                dependencies {
-                    provide<CustomerRepository> { FakeCustomerRepository(fakeData) }
-                }
                 module()
+                koinModule {
+                    single<CustomerRepository> {  FakeCustomerRepository(fakeData) }
+                }
             }
         }
 

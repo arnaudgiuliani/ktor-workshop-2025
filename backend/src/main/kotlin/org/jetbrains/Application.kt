@@ -1,6 +1,5 @@
 package org.jetbrains
 
-import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
@@ -18,6 +17,7 @@ import org.jetbrains.customers.customerDataModule
 import org.jetbrains.plugins.aiModule
 import org.jetbrains.plugins.setupDatabase
 import org.jetbrains.security.configureSecurity
+import org.koin.ktor.plugin.Koin
 import kotlin.time.Duration.Companion.minutes
 
 fun main(args: Array<String>) = EngineMain.main(args)
@@ -36,6 +36,7 @@ fun Application.module() {
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
     }
     install(SSE)
+    install(Koin)
     routing {
         configureCustomerRoutes()
         configureChatRoutes()

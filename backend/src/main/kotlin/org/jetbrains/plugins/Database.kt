@@ -36,6 +36,7 @@ fun Application.setupDatabase(config: DbConfig) {
         dataSource.close()
     }
 
+    // Keep this in Ktor DI
     dependencies {
         provide<Database> { database }
     }
